@@ -1,0 +1,3 @@
+TOKEN = ""
+DATAFILE = ""
+CLIENT_SECRET = ""
