@@ -65,7 +65,7 @@ async def send(ctx, *args):
 		guild = ctx.author.mutual_guilds[0]
 	else:
 		await ctx.send(f'Which of these servers do you want to send this to? {", ".join(str(i+1)+". "+g.name for i, g in enumerate(ctx.author.mutual_guilds))} [Please type the number corresponding to your choice.] ')
-		i = int(await bot.wait_for('message', check = lambda x: x.author == ctx.author and x.channel == ctx.channel))
+		i = int((await bot.wait_for('message', check = lambda x: x.author == ctx.author and x.channel == ctx.channel)).content())
 		try:
 			guild = ctx.author.mutual_guilds[i-1]
 		except:
