@@ -119,23 +119,23 @@ async def setup(ctx, *, role_name):
 	if ctx.guild is None:
 		await ctx.send("You can't use /setup in DMs because I can't see which threads I'm supposed to post to. Try again in your server, using the syntax `/setup [role name]` in the mod channel of your choice.")
 		return
-	#try:
-	channels = ctx.message.channel_mentions
-	if len(channels) == 0:
-		back_channel = ctx.channel
-	elif len(channels) == 1:
-		back_channel = channels[0]
-	async with lock:
-		try:
-			role = await ctx.guild.fetch_role(bot.allowed_channels[ctx.guild.id][1])
-		except:
-			role = await ctx.guild.create_role()
-		role = await role.edit(name=role_name)
-		bot.allowed_channels[ctx.guild.id] = (back_channel.id, role.id)
-	await update_guild_data(bot)
-	await ctx.send(f"I'm now configured to log messages to #{back_channel.name} for moderation. Users with the \"{role_name}\" role can send and receive messages through me. You can reconfigure me at any time.")
-	#except:
-	#	await ctx.send("Something didn't work. Please try again.")
+	try:
+		channels = ctx.message.channel_mentions
+		if len(channels) == 0:
+			back_channel = ctx.channel
+		elif len(channels) == 1:
+			back_channel = channels[0]
+		async with lock:
+			try:
+				role = await ctx.guild.fetch_role(bot.allowed_channels[ctx.guild.id][1])
+			except:
+				role = await ctx.guild.create_role()
+			role = await role.edit(name=role_name)
+			bot.allowed_channels[ctx.guild.id] = (back_channel.id, role.id)
+		await update_guild_data(bot)
+		await ctx.send(f"I'm now configured to log messages to #{back_channel.name} for moderation. Users with the \"{role_name}\" role can send and receive messages through me. You can reconfigure me at any time.")
+	except:
+		await ctx.send("Something didn't work. Please try again.")
 
 @bot.command()
 async def report(ctx):
