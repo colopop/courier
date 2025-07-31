@@ -160,6 +160,30 @@ async def report(ctx):
 
 	await ctx.send("Your report has been logged. A moderator will reach out to you soon.")
 
+@bot.command()
+async def list(ctx):
+	print("received LIST command")
+
+	#figure out what server to list from
+	guild = None
+	if len(ctx.author.mutual_guilds) == 1:
+		guild = ctx.author.mutual_guilds[0]
+	else:
+		await ctx.send(f'Which of these servers do you want to list users for? {", ".join(str(i+1)+". "+g.name for i, g in enumerate(ctx.author.mutual_guilds))} [Please type the number corresponding to your choice.] ')
+		i = int((await bot.wait_for('message', check = lambda x: x.author == ctx.author and x.channel == ctx.channel)).content)
+		try:
+			guild = ctx.author.mutual_guilds[i-1]
+		except:
+			guild = ctx.author.mutual_guilds[0]
+
+	role = await guild.fetch_role(bot.allowed_channels[guild.id][1])
+	msg = "Here are the members of {} with the @{} role:\n".format(guild.name, role.name)
+	for member in role.members:
+		msg += "{} (`@{}`)\n".format(member.display_name, member.name)
+
+	await ctx.send(msg)
+
+
 
 async def update_guild_data(bot):
 	print("Updating stored data...")
